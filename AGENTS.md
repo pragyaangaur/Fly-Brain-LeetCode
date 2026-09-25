@@ -8,19 +8,23 @@ The FlyWire v783 connectome of an adult fruit fly, run as a frozen recurrent net
 
 ## Status
 
-The full run, the order-blind ceiling and the robustness run are done and their outputs are in `results/`. The write-up page is `site/template.html`, built by `scripts/build_site.py`. The video is rendered by `scripts/render_video.py` into `media/`, which git ignores apart from `poster.png`. The repository has not been pushed. The LinkedIn draft is `linkedin_post.md`, which git also ignores.
+v2 is the current run, in `results/`. The first run is kept in `results/v1/` with `scripts/run_v1.py` and `scripts/robust.py`. The write-up page is `site/template.html`, built by `scripts/build_site.py`. The LinkedIn video is `scripts/render_screen.py`, a plain screen recording with the NeuroMechFly body, and `scripts/render_video.py` is an older whole-brain animation. Git ignores the videos in `media/` apart from `poster.png`. The LinkedIn draft is `linkedin_post.md`, which git also ignores. The repository is on GitHub as pragyaangaur/Fly-Brain-LeetCode.
 
 ## The results that matter
 
-- The fly was Accepted on one problem, Missing Number, which a symbol counter also solves.
-- A degree-preserving shuffle of the wiring beat the real fly on 11 of 12 problems and tied on the twelfth. `scripts/robust.py` confirmed it on Valid Parentheses and Best Time to Buy and Sell Stock: with three seeds each and a per-brain gain, every shuffled brain beat every real one.
+- v2 is Accepted on 3 of 12: Number of 1 Bits, Majority Element and Missing Number. v1 was Accepted on 1.
+- v1 read every answer as a label, which cannot decode a count. v2 can read integer answers as a rounded number, and that alone took Number of 1 Bits from 3 of 59 to 59 of 59 with the same frozen brain.
+- The nine failures need a stack, a pair comparison or a parity, and a linear readout of a frozen network does not expose those. Getting all twelve would need a nonlinear model on top or trained synapses, and neither would be the fly doing it. Do not add either and call it the fly.
+- The shuffled brain ties the real fly on the three solved problems and beats it on the other nine. In v1, `scripts/robust.py` confirmed the shuffle result with three seeds per brain.
 - On Two Sum, Length of Last Word, Best Time to Buy and Sell Stock and Max Consecutive Ones the fly beats the best order-blind method, so its dynamics do carry order.
-- A pilot with overlapping train and test inputs showed 80% on Number of 1 Bits. With inputs split by content it is 3 of 59. Keep this in the write-up.
+- v2 chooses gain and head on validation, and on some problems that did worse on test than v1. Length of Last Word fell from 128 to 82 of 156. Keep that in the write-up.
 
 ## Traps
 
 - Always split data with `flybrain/dataset.py`. Several problems have only a few hundred distinct inputs, and a random split lets the readout memorise them.
 - `data/Completeness_783.csv` comes from the Eon Systems repo and `data/Connectivity_783.parquet` from the Shiu et al. repo. Their neuron order was checked to match on 25 September 2026.
 - After moving the folder, `.venv/bin/pip` still points at the old path. Use `.venv/bin/python -m pip`.
-- The gain was fixed at 4 from a pilot on separate data before the full run. Do not retune it on test results.
+- v1 fixed the gain at 4 from a pilot on separate data. v2 picks the gain on validation. Never tune anything on test results.
 - The heatmap caption on the page says the two traces split within a few steps of the third symbol. That was checked against `results/trace.json`.
+- The NeuroMechFly body in the video is posed by hand and its legs are animated. Only the neuron activity, answers and verdicts are real, and the README says so.
+- `flygym` and `torch` share the venv. MuJoCo writes `MUJOCO_LOG.TXT` on a depth warning, and git ignores it.

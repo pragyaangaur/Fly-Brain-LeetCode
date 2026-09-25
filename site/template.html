@@ -126,7 +126,7 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 6px; }
     <div class="eyebrow">Drosophila melanogaster · FlyWire v783</div>
     <h1>I gave a fruit fly's brain twelve LeetCode problems</h1>
     <p class="lede">The whole wiring diagram of an adult fly brain, 138,639 neurons, run as a frozen network. Problems go in through its taste, touch and smell neurons one symbol at a time. Answers are read off the neurons that carry commands down to its body. The only thing trained is that final reading.</p>
-    <p class="lede">It was Accepted once, on the one problem you can solve by counting symbols. The more interesting result is what happened when I scrambled its wiring.</p>
+    <p class="lede">It was Accepted on three of twelve, the three whose answers are really counts. The more interesting results are why my first readout only got one, and what happened when I scrambled its wiring.</p>
   </div>
   <div class="sub" id="hero-card" aria-label="Example submission result"></div>
 </header>
@@ -283,13 +283,13 @@ const probs = Object.values(R).sort((a, b) => a.number - b.number);
       const m = a => (100 * a.reduce((x, y) => x + y, 0) / a.length).toFixed(0);
       return `${R[num].title}: fly ${m(g.fly)}%, shuffled ${m(g.rewired)}% (${g.fly.length} and ${g.rewired.length} seeds)`;
     });
-    if (parts.length) robustText = ` Repeating it with fresh random seeds, and letting each brain pick its own best gain on validation data, gave the same ordering. ${parts.join(". ")}.`;
+    if (parts.length) robustText = ` Repeating it with fresh random seeds, and letting each brain pick its own best gain on validation data, gave the same ordering with the first readout. ${parts.join(". ")}.`;
   }
   const items = [
     { big: `${worse} of 12`, t: "Shuffling the wiring made it better", p: `I kept every neuron, every synapse weight and every sign, and shuffled which neuron each connection lands on. That shuffled brain beat the real one on ${worse} problems and tied on ${tie}.${robustText} Whatever the fly's wiring is tuned for, it is not this.` },
     { big: `${orderly.length} of 12`, t: "It does remember order", p: `On ${orderly.map(p => p.title).join(", ")}, the fly beats the best any method can do while ignoring symbol order. Something in its dynamics carries what came first. On Two Sum it passes ${R["1"].scores.fly_descending} of 1000 where order-blind guessing gets ${R["1"].scores.order_blind}.` },
-    { big: `${bits.scores.fly_descending} of ${bits.n_test}`, t: "The first good result was memorisation", p: `A pilot run said the fly counted bits at 80% accuracy. That pilot let the same inputs appear in training and testing. Once hidden tests were inputs it had never seen, Number of 1 Bits fell to ${bits.scores.fly_descending} of ${bits.n_test}. Counting ones is trivial for a lookup table and nearly impossible for this readout.` },
-    { big: `${R["268"].scores.fly_descending} of ${R["268"].n_test}`, t: "Accepted once, on the easy kind", p: `Missing Number was the only perfect score, and a method that only counts symbols gets it perfect too. Every other problem is Wrong Answer, and on a real judge one failed test case is enough.` },
+    { big: `${bits.scores.fly_descending} of ${bits.n_test}`, t: "The fly could count, my readout could not", p: `The first readout treated every answer as one of several unrelated labels, and scored 3 of 59 on Number of 1 Bits. A linear readout cannot pick the middle values of one ordered quantity that way. Letting it answer with a number that gets rounded took the same frozen brain to ${bits.scores.fly_descending} of ${bits.n_test} on inputs it had never seen.` },
+    { big: `${probs.filter(p => p.verdict === "Accepted").length} of 12`, t: "It solves the sums and fails the logic", p: `Accepted on ${probs.filter(p => p.verdict === "Accepted").map(p => p.title).join(", ")}. The readout is a weighted sum of neuron activity, so it answers what the brain keeps as a running total. Stacks, pair comparisons and parity are not sums. Sign of the Product is ${R["1822"].scores.order_blind} of 1000 for a symbol counter and ${R["1822"].scores.fly_descending} for the fly.` },
   ];
   $("#findings").innerHTML = items.map(i => `<div class="finding"><div class="big">${i.big}</div><h3>${i.t}</h3><p>${i.p}</p></div>`).join("");
 })();

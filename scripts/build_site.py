@@ -16,7 +16,7 @@ def load(name):
 
 html = (ROOT / "site" / "template.html").read_text()
 html = html.replace("/*RESULTS*/null", json.dumps(json.loads(load("results.json")), separators=(",", ":")))
-html = html.replace("/*ROBUST*/null", load("robust.json"))
+html = html.replace("/*ROBUST*/null", load("v1/robust.json"))
 html = html.replace("/*TRACE*/null", load("trace.json"))
 (ROOT / "site" / "index.html").write_text(html)
 print("wrote site/index.html", len(html) // 1024, "KB")
