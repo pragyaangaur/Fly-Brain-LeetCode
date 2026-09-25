@@ -22,6 +22,7 @@ from flybrain import connectome as cx  # noqa: E402
 from flybrain.brain import BrainConfig, FlyBrain  # noqa: E402
 from flybrain.dataset import RESULTS  # noqa: E402
 from flybrain.problems import BY_NUMBER  # noqa: E402
+from flybrain.readout import decode  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 MEDIA = ROOT / "media"
@@ -71,12 +72,12 @@ def positions():
 def simulate():
     """Run the real brain on INPUT, recording every neuron, and read the fly's answer."""
     p = BY_NUMBER[20]
-    brain = FlyBrain.build(BrainConfig(gain=4.0))
+    r = np.load(RESULTS / "readouts.npz")
+    brain = FlyBrain.build(BrainConfig(gain=float(r["20_gain"])))
     symbols = brain.symbol_map(p.vocab, seed=p.number)
     feats, traj = brain.run([list(INPUT)], symbols, record=np.arange(cx.N_NEURONS))
-    r = np.load(RESULTS / "readouts.npz")
-    z = np.hstack([(feats["descending"] - r["20_mu"]) / r["20_sd"], np.ones((1, 1))]) @ r["20_B"]
-    answer = p.classes[int(z.argmax())]
+    z = (feats["descending"] - r["20_mu"]) / r["20_sd"] @ r["20_W"] + r["20_ym"]
+    answer = p.classes[int(decode(str(r["20_head"]), z, p.classes)[0])]
     return {
         "traj": traj[:, :, 0].astype(np.float32),                 # (steps, neurons)
         "symbols": {s: v for s, v in symbols.items()},
