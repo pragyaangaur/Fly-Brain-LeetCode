@@ -7,6 +7,7 @@ is the NeuroMechFly model posed by hand. Its tapping legs are animation and are 
 brain.
 
     python scripts/render_screen.py            # media/fly_brain_leetcode.mp4
+    python scripts/render_screen.py --only 1 20 169 191 268   # the LinkedIn cut, five problems
     python scripts/render_screen.py --preview  # a few stills in media/preview/
 """
 import argparse
@@ -255,9 +256,12 @@ def hud(img, text_lines):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--preview", action="store_true")
+    ap.add_argument("--only", nargs="*", help="problem numbers to show, in the order given by number")
     args = ap.parse_args()
     MEDIA.mkdir(exist_ok=True)
     results = json.loads((RESULTS / "results.json").read_text())
+    if args.only:
+        results = {k: v for k, v in results.items() if k in args.only}
     keys = sorted(results, key=int)
     cases = {k: pick_case(results[k]) for k in keys}
     tr = traces(results)
