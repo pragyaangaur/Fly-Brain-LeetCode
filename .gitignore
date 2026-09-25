@@ -10,3 +10,4 @@ render.log
 media/preview/
 media/*.mp4
 MUJOCO_LOG.TXT
+!media/fly_brain_leetcode.mp4

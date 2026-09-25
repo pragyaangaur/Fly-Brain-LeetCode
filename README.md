@@ -1,6 +1,6 @@
 # Fly Brain LeetCode
 
-<p align="center"><img src="media/poster.png" width="720"></p>
+<p align="center"><a href="media/fly_brain_leetcode.mp4"><img src="media/fly_brain_leetcode.gif" width="720" alt="The fly at the judge: Two Sum and Valid Parentheses fail, then Majority Element, Number of 1 Bits and Missing Number are Accepted"></a></p>
 
 I took the complete wiring diagram of an adult fruit fly brain and made it answer LeetCode problems. The brain is FlyWire's v783 connectome, with 138,639 neurons and 2.7 million connections, and it is the same data behind the Eon Systems whole-brain emulation. Its wiring is never changed. Problems go in through its taste, touch and smell neurons one symbol at a time, and answers are read off the 1,303 descending neurons that carry commands from the brain to the body. The only thing trained is a linear readout on those neurons.
 
