@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+.DS_Store
+data/
+run.log
+robust.log
+site/index.html
+linkedin_post.md
+render.log
+media/preview/
+media/*.mp4
