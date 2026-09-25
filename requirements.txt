@@ -5,3 +5,4 @@ pyarrow
 scipy
 pillow
 imageio-ffmpeg
+flygym

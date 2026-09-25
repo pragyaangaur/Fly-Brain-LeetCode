@@ -61,6 +61,7 @@ python -m venv .venv && .venv/bin/python -m pip install -r requirements.txt
 .venv/bin/python scripts/trace.py            # neuron traces for the page
 .venv/bin/python scripts/build_site.py       # site/index.html from the result files
 .venv/bin/python scripts/render_video.py     # media/fly_brain_leetcode.mp4
+.venv/bin/python scripts/render_hook.py      # media/fly_brain_leetcode_hook.mp4
 ```
 
 The simulation uses Apple's MPS backend when it is there and falls back to the CPU otherwise.
@@ -78,7 +79,8 @@ scripts/order_blind.py      the lookup-table ceiling for any order-blind method
 scripts/robust.py           seeds and gains for the shuffled-versus-real comparison
 scripts/trace.py            neuron traces for the page figure
 scripts/build_site.py       fill site/template.html with the result files
-scripts/render_video.py     the video of the brain reading a problem
+scripts/render_video.py     the long video of the brain reading a problem
+scripts/render_hook.py      the short video with the NeuroMechFly body
 results/                    result files and the saved readouts
 ```
 
