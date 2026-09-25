@@ -14,6 +14,7 @@ import numpy as np
 
 from flybrain.brain import BrainConfig, FlyBrain
 from flybrain.problems import BY_NUMBER
+from flybrain.readout import decode
 
 ROOT = Path(__file__).resolve().parent
 
@@ -36,11 +37,11 @@ def main():
     if bad:
         sys.exit(f"the fly was only trained on the symbols {p.vocab}, not {bad}")
     r = np.load(ROOT / "results" / "readouts.npz")
-    B, mu, sd = r[f"{p.number}_B"], r[f"{p.number}_mu"], r[f"{p.number}_sd"]
-    brain = FlyBrain.build(BrainConfig(gain=4.0))
-    feats = brain.run([toks], brain.symbol_map(p.vocab, seed=p.number))["descending"]
-    scores = np.hstack([(feats - mu) / sd, np.ones((1, 1))]) @ B
-    answer = p.classes[int(scores.argmax())]
+    n = p.number
+    brain = FlyBrain.build(BrainConfig(gain=float(r[f"{n}_gain"])))
+    feats = brain.run([toks], brain.symbol_map(p.vocab, seed=n))["descending"]
+    scores = (feats - r[f"{n}_mu"]) / r[f"{n}_sd"] @ r[f"{n}_W"] + r[f"{n}_ym"]
+    answer = p.classes[int(decode(str(r[f"{n}_head"]), scores, p.classes)[0])]
     truth = p.solve(x)
     print(f"{p.name}\n  input     {p.show(x)}\n  symbols   {' '.join(toks)}")
     print(f"  fly says  {answer}\n  expected  {truth}\n  {'correct' if answer == truth else 'wrong'}")
