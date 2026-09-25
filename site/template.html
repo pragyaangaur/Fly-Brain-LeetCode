@@ -1,0 +1,327 @@
+<title>Fly Brain LeetCode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #F3F5F2; --surface: #FFFFFF; --ink: #17201B; --muted: #5A6760; --line: #DCE3DE; --soft: #E9EEEA;
+  --fly: #B7791F; --rewired: #4B6B8A; --blind: #8E9A93;
+  --ac: #2DB55D; --wa: #E0443E; --ac-bg: #E4F5EA; --wa-bg: #FBE7E6;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #101512; --surface: #182019; --ink: #E4EBE6; --muted: #98A69E; --line: #2A342D; --soft: #1F2822;
+    --fly: #E3A945; --rewired: #86A6C6; --blind: #6F7D75;
+    --ac: #3CCB6C; --wa: #F2645E; --ac-bg: #173022; --wa-bg: #3A1D1C;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #101512; --surface: #182019; --ink: #E4EBE6; --muted: #98A69E; --line: #2A342D; --soft: #1F2822;
+  --fly: #E3A945; --rewired: #86A6C6; --blind: #6F7D75;
+  --ac: #3CCB6C; --wa: #F2645E; --ac-bg: #173022; --wa-bg: #3A1D1C;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--body); }
+.wrap { max-width: 960px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 80px; display: grid; gap: 72px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.1; text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(2.2rem, 6vw, 3.6rem); }
+h2 { font-size: clamp(1.5rem, 3.4vw, 2rem); }
+h3 { font-size: 1.1rem; }
+p { margin: 0; max-width: 65ch; }
+.eyebrow { font: 500 0.75rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+code, .mono { font-family: var(--mono); font-size: 0.92em; }
+section { display: grid; gap: 20px; }
+.prose { display: grid; gap: 14px; }
+.muted { color: var(--muted); }
+a { color: inherit; text-underline-offset: 3px; }
+
+/* Hero */
+.hero { display: grid; gap: 28px; grid-template-columns: 1.1fr 1fr; align-items: start; }
+.hero-text { display: grid; gap: 18px; }
+.lede { font-size: 1.12rem; color: var(--muted); }
+@media (max-width: 760px) { .hero { grid-template-columns: 1fr; } }
+
+/* The submission card imitates the shape of a judge's result, not any brand */
+.sub { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: grid; gap: 14px; font-size: 0.92rem; }
+.sub-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.verdict { font: 600 1.35rem/1.1 var(--body); }
+.verdict.wa { color: var(--wa); } .verdict.ac { color: var(--ac); }
+.sub-meta { color: var(--muted); font-size: 0.85rem; }
+.who { display: flex; gap: 10px; align-items: center; color: var(--muted); font-size: 0.85rem; }
+.who b { color: var(--ink); font-weight: 500; font-style: italic; }
+.io { display: grid; gap: 8px; }
+.io div { display: grid; gap: 4px; }
+.io label { font-size: 0.78rem; color: var(--muted); }
+.io pre { margin: 0; background: var(--soft); border-radius: 6px; padding: 8px 10px; font: 400 0.9rem/1.4 var(--mono); overflow-x: auto; }
+.io pre.bad { color: var(--wa); }
+.progress { height: 6px; background: var(--wa-bg); border-radius: 3px; overflow: hidden; }
+.progress i { display: block; height: 100%; background: var(--ac); }
+
+/* Pipeline */
+.pipe { overflow-x: auto; }
+.pipe svg { display: block; min-width: 720px; width: 100%; height: auto; }
+.pipe text { font-family: var(--body); fill: var(--ink); }
+.pipe .small { font-size: 12px; fill: var(--muted); }
+.pipe .num { font-family: var(--mono); font-size: 13px; }
+
+/* Scoreboard */
+.legend { display: flex; flex-wrap: wrap; gap: 18px; font-size: 0.85rem; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.sw { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+.board { display: grid; border-top: 1px solid var(--line); }
+.row { display: grid; grid-template-columns: minmax(0, 15rem) 7.5rem 5.5rem minmax(0, 1fr); gap: 14px; align-items: center; padding-block: 11px; border-bottom: 1px solid var(--line); }
+.row.head { font: 500 0.72rem/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-block: 10px; }
+.pname { font-weight: 500; font-size: 0.93rem; min-width: 0; }
+.pname small { display: block; color: var(--muted); font-weight: 400; font-size: 0.78rem; }
+.pill { justify-self: start; font: 500 0.75rem/1 var(--body); padding: 5px 9px; border-radius: 99px; white-space: nowrap; }
+.pill.wa { color: var(--wa); background: var(--wa-bg); } .pill.ac { color: var(--ac); background: var(--ac-bg); }
+.passed { font: 400 0.88rem/1 var(--mono); font-variant-numeric: tabular-nums; }
+.track { position: relative; height: 22px; }
+.track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--line); }
+.track .tick { position: absolute; top: 5px; bottom: 5px; width: 1px; background: var(--line); }
+.dot { position: absolute; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; }
+.dot.fly { background: var(--fly); z-index: 3; }
+.dot.rewired { background: var(--rewired); z-index: 2; }
+.dot.blind { background: var(--surface); border: 2px solid var(--blind); z-index: 1; }
+.axis { display: flex; justify-content: space-between; font: 400 0.7rem/1 var(--mono); color: var(--muted); }
+@media (max-width: 720px) {
+  .row { grid-template-columns: 1fr auto; row-gap: 8px; }
+  .row.head { display: none; }
+  .row .pill { grid-column: 2; grid-row: 1; justify-self: end; }
+  .row .passed { grid-column: 1; }
+  .row .track { grid-column: 1 / -1; }
+}
+
+/* Findings */
+.findings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 40px; }
+.finding { display: grid; gap: 8px; align-content: start; }
+.finding .big { font: 700 2.1rem/1 var(--display); font-variant-numeric: tabular-nums; }
+@media (max-width: 720px) { .findings { grid-template-columns: 1fr; } }
+
+/* Heatmaps */
+.maps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.map { display: grid; gap: 8px; }
+.map canvas { width: 100%; height: auto; border-radius: 4px; image-rendering: pixelated; background: var(--soft); }
+.map .cap { display: flex; justify-content: space-between; gap: 8px; font-size: 0.85rem; }
+.scale { display: flex; align-items: center; gap: 8px; font: 400 0.75rem/1 var(--mono); color: var(--muted); }
+.scale i { width: 140px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #3B6C9E, var(--soft), var(--fly)); }
+@media (max-width: 640px) { .maps { grid-template-columns: 1fr; } }
+
+.limits { display: grid; gap: 12px; padding: 0; margin: 0; list-style: none; max-width: 70ch; }
+.limits li { padding-left: 18px; position: relative; }
+.limits li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: 7px; height: 1px; background: var(--muted); }
+pre.cmd { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; font: 400 0.88rem/1.6 var(--mono); overflow-x: auto; }
+footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 6px; }
+</style>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="hero-text">
+    <div class="eyebrow">Drosophila melanogaster · FlyWire v783</div>
+    <h1>I gave a fruit fly's brain twelve LeetCode problems</h1>
+    <p class="lede">The whole wiring diagram of an adult fly brain, 138,639 neurons, run as a frozen network. Problems go in through its taste, touch and smell neurons one symbol at a time. Answers are read off the neurons that carry commands down to its body. The only thing trained is that final reading.</p>
+    <p class="lede">It was Accepted once, on the one problem you can solve by counting symbols. The more interesting result is what happened when I scrambled its wiring.</p>
+  </div>
+  <div class="sub" id="hero-card" aria-label="Example submission result"></div>
+</header>
+
+<section>
+  <div class="eyebrow">How a fly reads a problem</div>
+  <h2>Symbols in through the senses, answers out through the body</h2>
+  <div class="pipe" id="pipe"></div>
+  <div class="prose">
+    <p>Each symbol a problem can contain, such as <code>(</code> or <code>7</code>, gets its own fixed set of 40 sensory neurons. Showing the fly <code>"([)]"</code> means stimulating four of those sets in order. Between symbols there is a short silence, so <code>"11"</code> and <code>"1"</code> look different.</p>
+    <p>The connections come from FlyWire's proofread v783 release, the same data behind the Eon Systems emulation. Every connection with at least five synapses is kept. That leaves 2.7 million connections, each signed excitatory or inhibitory by its predicted neurotransmitter. After the last symbol, the network settles briefly and a ridge regression reads the answer from the 1,303 descending neurons. None of the brain's weights change.</p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Judged like LeetCode</div>
+  <h2>Twelve Easy problems, hidden test cases it had never seen</h2>
+  <p class="muted">Inputs are split by their content, so no test case ever appeared in training. That matters for problems like Number of 1 Bits, which only has 256 possible inputs.</p>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--fly)"></i>Real fly wiring</span>
+    <span><i class="sw" style="background:var(--rewired)"></i>Same brain, connections shuffled</span>
+    <span><i class="sw" style="border:2px solid var(--blind);background:var(--surface)"></i>Best possible without knowing symbol order</span>
+  </div>
+  <div class="board" id="board"></div>
+</section>
+
+<section>
+  <div class="eyebrow">What came out</div>
+  <h2>The fly's own wiring was not what helped</h2>
+  <div class="findings" id="findings"></div>
+</section>
+
+<section>
+  <div class="eyebrow">Inside the brain</div>
+  <h2>Sixty descending neurons reading two strings</h2>
+  <p>Rows are 60 of the brain's descending neurons, and columns are simulation steps, four per symbol plus six to settle. Left is a valid string and right is an invalid one. They share their first two symbols, and the activity splits within a few steps of the third one arriving.</p>
+  <div class="maps" id="maps"></div>
+  <div class="scale"><span>−1</span><i></i><span>+1</span><span>neuron activity</span></div>
+</section>
+
+<section>
+  <div class="eyebrow">Limits</div>
+  <h2>What this is not</h2>
+  <ul class="limits">
+    <li>It is a rate model. Each neuron is a smooth number between −1 and 1. Shiu et al. and Eon Systems use spiking neurons, which are closer to biology and much slower to simulate.</li>
+    <li>At the gain used here the whole brain lights up at once. That regime is useful for computing but it is not how a real fly brain behaves.</li>
+    <li>The problems are scaled down to what fits in a few symbols. Two Sum uses four numbers from 0 to 9.</li>
+    <li>The fly produces answers, not code, so nothing here can be submitted to LeetCode itself.</li>
+    <li>The readout is trained separately for each problem. There is no single fly that knows all twelve.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="eyebrow">Run it yourself</div>
+  <h2>Hand the fly your own input</h2>
+  <pre class="cmd">python run.py                    # train readouts and judge all twelve problems
+python solve.py 20 "([)]"        # the fly answers one input
+python solve.py 136 "[4,1,2,1,2]"</pre>
+</section>
+
+<footer>
+  <div>Connectome: FlyWire Consortium, Dorkenwald et al. and Schlegel et al., Nature 2024. Model data from Shiu et al., Nature 2024. Built by Pragyaan Gaur as a follow up to leetclaude.</div>
+</footer>
+</div>
+
+<script>
+const R = /*RESULTS*/null;
+const ROBUST = /*ROBUST*/null;
+const TRACE = /*TRACE*/null;
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const fmt = v => typeof v === "boolean" ? String(v) : JSON.stringify(v);
+const probs = Object.values(R).sort((a, b) => a.number - b.number);
+
+// Hero card: Valid Parentheses, with the most embarrassing wrong answer.
+(() => {
+  const p = R["20"], s = p.scores.fly_descending, n = p.n_test;
+  const ex = p.examples.wrong.find(e => e.input === 's = "))"') || p.examples.wrong[0];
+  $("#hero-card").innerHTML = `
+    <div class="sub-head"><span class="verdict wa">Wrong Answer</span><span class="sub-meta">${p.number}. ${p.title}</span></div>
+    <div><div class="mono">${s} / ${n} testcases passed</div></div>
+    <div class="progress" role="img" aria-label="${s} of ${n} passed"><i style="width:${(100 * s / n).toFixed(1)}%"></i></div>
+    <div class="who">Submitted by <b>Drosophila melanogaster</b> · 138,639 neurons</div>
+    <div class="io">
+      <div><label>Input</label><pre>${esc(ex.input)}</pre></div>
+      <div><label>Output</label><pre class="bad">${fmt(ex.fly)}</pre></div>
+      <div><label>Expected</label><pre>${fmt(ex.expected)}</pre></div>
+    </div>`;
+})();
+
+// Pipeline diagram
+(() => {
+  const W = 900, H = 170;
+  const boxes = [
+    { x: 0, w: 140, t: "Problem input", s: 's = "([)]"', mono: true },
+    { x: 180, w: 150, t: "Sensory neurons", s: "40 per symbol, of 5,577" },
+    { x: 370, w: 170, t: "Whole brain, frozen", s: "138,639 neurons · 2.7M links", hl: true },
+    { x: 580, w: 150, t: "Descending neurons", s: "1,303, brain to body" },
+    { x: 770, w: 130, t: "Linear readout", s: "the only trained part", out: true },
+  ];
+  let g = "";
+  boxes.forEach((b, i) => {
+    const stroke = b.hl ? "var(--fly)" : "var(--line)";
+    g += `<rect x="${b.x + 1}" y="45" width="${b.w - 2}" height="80" rx="8" fill="var(--surface)" stroke="${stroke}" stroke-width="${b.hl ? 2 : 1}"/>`;
+    g += `<text x="${b.x + b.w / 2}" y="80" text-anchor="middle" font-size="14" font-weight="600">${b.t}</text>`;
+    g += `<text x="${b.x + b.w / 2}" y="102" text-anchor="middle" class="${b.mono ? "num" : "small"}"${b.mono ? ' fill="var(--muted)"' : ""}>${esc(b.s)}</text>`;
+    if (i < boxes.length - 1) {
+      const x1 = b.x + b.w + 4, x2 = boxes[i + 1].x - 6;
+      g += `<line x1="${x1}" y1="85" x2="${x2}" y2="85" stroke="var(--muted)" stroke-width="1.5"/><path d="M${x2} 85 l-7 -4 v8 z" fill="var(--muted)"/>`;
+    }
+  });
+  g += `<text x="455" y="30" text-anchor="middle" class="small">tanh rate model, signed by neurotransmitter</text>`;
+  g += `<text x="835" y="148" text-anchor="middle" class="small">→ false</text>`;
+  $("#pipe").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Input symbols stimulate sensory neurons, the frozen brain runs, descending neurons are read by a trained linear readout">${g}</svg>`;
+})();
+
+// Scoreboard
+(() => {
+  let h = `<div class="row head"><span>Problem</span><span>Verdict</span><span>Passed</span><span>Share of hidden tests passed</span></div>`;
+  for (const p of probs) {
+    const n = p.n_test, f = p.scores.fly_descending, r = p.scores.rewired_descending, b = p.scores.order_blind;
+    const ac = f === n;
+    const pct = v => (100 * v / n).toFixed(1);
+    h += `<div class="row">
+      <div class="pname">${p.number}. ${p.title}<small>${n} hidden tests</small></div>
+      <span class="pill ${ac ? "ac" : "wa"}">${ac ? "Accepted" : "Wrong Answer"}</span>
+      <span class="passed">${f}/${n}</span>
+      <div class="track" title="fly ${pct(f)}%, rewired ${pct(r)}%, order-blind ${pct(b)}%">
+        ${[25, 50, 75].map(t => `<i class="tick" style="left:${t}%"></i>`).join("")}
+        <i class="dot blind" style="left:${pct(b)}%"></i>
+        <i class="dot rewired" style="left:${pct(r)}%"></i>
+        <i class="dot fly" style="left:${pct(f)}%"></i>
+      </div></div>`;
+  }
+  h += `<div class="row" style="border-bottom:0;padding-block:6px"><span></span><span></span><span></span><div class="axis"><span>0%</span><span>50%</span><span>100%</span></div></div>`;
+  $("#board").innerHTML = h;
+})();
+
+// Findings
+(() => {
+  const worse = probs.filter(p => p.scores.rewired_descending > p.scores.fly_descending).length;
+  const tie = probs.filter(p => p.scores.rewired_descending === p.scores.fly_descending).length;
+  const orderly = probs.filter(p => p.scores.fly_descending > p.scores.order_blind);
+  const bits = R["191"];
+  let robustText = "";
+  if (ROBUST) {
+    const groups = {};
+    for (const [k, v] of Object.entries(ROBUST)) {
+      const [num, kind] = k.split("/");
+      ((groups[num] ??= { fly: [], rewired: [] })[kind]).push(v.best.test);
+    }
+    const parts = Object.entries(groups).filter(([, g]) => g.fly.length && g.rewired.length).map(([num, g]) => {
+      const m = a => (100 * a.reduce((x, y) => x + y, 0) / a.length).toFixed(0);
+      return `${R[num].title}: fly ${m(g.fly)}%, shuffled ${m(g.rewired)}% (${g.fly.length} and ${g.rewired.length} seeds)`;
+    });
+    if (parts.length) robustText = ` Repeating it with fresh random seeds, and letting each brain pick its own best gain on validation data, gave the same ordering. ${parts.join(". ")}.`;
+  }
+  const items = [
+    { big: `${worse} of 12`, t: "Shuffling the wiring made it better", p: `I kept every neuron, every synapse weight and every sign, and shuffled which neuron each connection lands on. That shuffled brain beat the real one on ${worse} problems and tied on ${tie}.${robustText} Whatever the fly's wiring is tuned for, it is not this.` },
+    { big: `${orderly.length} of 12`, t: "It does remember order", p: `On ${orderly.map(p => p.title).join(", ")}, the fly beats the best any method can do while ignoring symbol order. Something in its dynamics carries what came first. On Two Sum it passes ${R["1"].scores.fly_descending} of 1000 where order-blind guessing gets ${R["1"].scores.order_blind}.` },
+    { big: `${bits.scores.fly_descending} of ${bits.n_test}`, t: "The first good result was memorisation", p: `A pilot run said the fly counted bits at 80% accuracy. That pilot let the same inputs appear in training and testing. Once hidden tests were inputs it had never seen, Number of 1 Bits fell to ${bits.scores.fly_descending} of ${bits.n_test}. Counting ones is trivial for a lookup table and nearly impossible for this readout.` },
+    { big: `${R["268"].scores.fly_descending} of ${R["268"].n_test}`, t: "Accepted once, on the easy kind", p: `Missing Number was the only perfect score, and a method that only counts symbols gets it perfect too. Every other problem is Wrong Answer, and on a real judge one failed test case is enough.` },
+  ];
+  $("#findings").innerHTML = items.map(i => `<div class="finding"><div class="big">${i.big}</div><h3>${i.t}</h3><p>${i.p}</p></div>`).join("");
+})();
+
+// Heatmaps
+(() => {
+  const css = getComputedStyle(document.documentElement);
+  const hex = s => { s = s.trim().replace("#", ""); return [0, 2, 4].map(i => parseInt(s.slice(i, i + 2), 16)); };
+  const draw = () => {
+    const pos = hex(css.getPropertyValue("--fly")), mid = hex(getComputedStyle(document.documentElement).getPropertyValue("--soft")), neg = [59, 108, 158];
+    $("#maps").innerHTML = "";
+    TRACE.strings.forEach((str, k) => {
+      const tr = TRACE.descending_traces[k]; // [neuron][step]
+      const rows = tr.length, cols = tr[0].length;
+      const c = document.createElement("canvas"); c.width = cols; c.height = rows;
+      c.style.aspectRatio = `${cols * 3} / ${rows}`;
+      const ctx = c.getContext("2d"), img = ctx.createImageData(cols, rows);
+      tr.forEach((row, i) => row.forEach((v, j) => {
+        const t = Math.max(-1, Math.min(1, v)), a = Math.abs(t), end = t >= 0 ? pos : neg, o = 4 * (i * cols + j);
+        for (let q = 0; q < 3; q++) img.data[o + q] = Math.round(mid[q] + (end[q] - mid[q]) * a);
+        img.data[o + 3] = 255;
+      }));
+      ctx.putImageData(img, 0, 0);
+      const valid = k === 0;
+      const box = document.createElement("div"); box.className = "map";
+      box.innerHTML = `<div class="cap"><code>s = "${esc(str)}"</code><span class="pill ${valid ? "ac" : "wa"}">${valid ? "valid" : "invalid"}</span></div>`;
+      box.appendChild(c);
+      $("#maps").appendChild(box);
+    });
+  };
+  draw();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
+  new MutationObserver(draw).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+})();
+</script>
