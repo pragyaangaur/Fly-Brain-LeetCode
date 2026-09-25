@@ -4,7 +4,7 @@ For two problems that need memory of order, run three real-fly seeds (different 
 neurons per symbol) and three different rewirings, each at three gains. Each brain gets the
 gain that does best on its own validation set, and only then is it scored on the hidden tests.
 
-Writes results/robust.json.
+Uses the v1 label-only readout. Writes results/v1/robust.json.
 """
 import json
 import sys
@@ -26,7 +26,7 @@ SEEDS = [0, 1, 2]
 
 def main():
     labels, edges = cx.load_labels(), cx.load_edges()
-    path = OUT / "robust.json"
+    path = OUT / "v1" / "robust.json"
     res = json.loads(path.read_text()) if path.exists() else {}
     data = {n: make_data(BY_NUMBER[n], seed=BY_NUMBER[n].number) for n in PROBLEMS}
     for kind in ["fly", "rewired"]:
