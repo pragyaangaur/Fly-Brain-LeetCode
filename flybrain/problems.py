@@ -7,7 +7,7 @@ answer. The reference solutions are written the way you would write them on Leet
 from collections import Counter
 from dataclasses import dataclass
 from itertools import combinations
-from typing import Any, Callable
+from typing import Callable
 
 DIGITS = [str(d) for d in range(10)]
 

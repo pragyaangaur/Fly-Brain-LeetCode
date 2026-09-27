@@ -201,7 +201,7 @@ def main():
     sym_steps = len(INPUT) * per
 
     # Timeline in seconds.
-    T_IN, T_Q, T_SIM0 = 3.5, 6.5, 7.0
+    T_Q, T_SIM0 = 6.5, 7.0
     T_SIM1 = T_SIM0 + 11.0
     T_READ, T_VERDICT, T_TWIST, T_END = T_SIM1 + 0.3, T_SIM1 + 3.2, T_SIM1 + 7.6, T_SIM1 + 12.6
     total = T_END + 3.5
